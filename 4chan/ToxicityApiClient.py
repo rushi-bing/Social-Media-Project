@@ -17,7 +17,7 @@ def analyze_toxicity(text, max_retries=3):
         max_retries (int): Maximum retry attempts for timeouts or transient errors.
 
     Returns:
-        dict: A dictionary containing the toxicity analysis result, or None if analysis fails.
+        dict: A dictionary containing the toxicity analysis result, or default_value if analysis fails.
 
     Example Response:
         {
@@ -25,9 +25,10 @@ def analyze_toxicity(text, max_retries=3):
             "confidence": 0.87
         }
     """
+    default_value={"class": "neutral", "confidence": 0.0}
     if not text or not isinstance(text, str) or len(text.strip()) == 0:
         logger.warning("Invalid or empty text provided for toxicity analysis.")
-        return None
+        return default_value
 
     headers = {
         "Authorization": f"Bearer {API_KEY}",
@@ -48,11 +49,10 @@ def analyze_toxicity(text, max_retries=3):
 
             # Parse the JSON response
             try:
-                response_json = response.json()
-                print(response_json)
+                result = response.json()
             except ValueError:
                 print(f"Error: Invalid JSON response: {response.text}")
-                return False
+                return default_value
 
             # Validate expected keys in response
             if "class" in result and "confidence" in result:
@@ -63,10 +63,10 @@ def analyze_toxicity(text, max_retries=3):
                 }
             elif "error" in result:
                 logger.error(f"API returned an error: {result.get('error')}")
-                return None
+                return default_value
             else:
                 logger.error(f"Unexpected response format: {result}")
-                return None
+                return default_value
 
         except requests.exceptions.Timeout:
             logger.warning(f"Toxicity analysis request timed out. Retry {retries + 1} of {max_retries}.")
@@ -89,4 +89,4 @@ def analyze_toxicity(text, max_retries=3):
         retries += 1
 
     logger.error("Toxicity analysis failed after maximum retries.")
-    return None
+    return default_value
