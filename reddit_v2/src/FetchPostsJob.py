@@ -25,8 +25,7 @@ def extract_post_info(data):
     }
 
     # Add toxicity analysis
-    if post["selftext"]:
-        post["toxicity"] = analyze_toxicity(post["selftext"])
+    post["toxicity"] = analyze_toxicity(post["selftext"])
 
     return post
 
