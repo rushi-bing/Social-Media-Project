@@ -56,7 +56,7 @@ def analyze_toxicity(text, max_retries=3):
 
             # Validate expected keys in response
             if "class" in result and "confidence" in result:
-                logger.info(f"Toxicity analysis successful: {result}")
+                # logger.info(f"Toxicity analysis successful: {result}")
                 return {
                     "class": result["class"],
                     "confidence": result["confidence"],

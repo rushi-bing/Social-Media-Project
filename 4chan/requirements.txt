@@ -3,3 +3,5 @@ pyfaktory
 python-dotenv ~= 1.0
 pymongo
 requests ~= 2.32
+pandas
+matplotlib
